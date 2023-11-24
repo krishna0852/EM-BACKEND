@@ -19,9 +19,7 @@ ENV  JAVA_HOME=/usr/lib/jvm/jdk-17 \
      PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin 
 
 
-ENV JAVA_HOME=/usr/lib/jvm/jdk-17 \
-    MAVEN_HOME=/softwares/apache-maven-3.9.5 \
-    PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin
+
 
 #RUN java -version && mvn -version
    
