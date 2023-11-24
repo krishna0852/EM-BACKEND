@@ -15,7 +15,7 @@ RUN curl -O https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3
 
 
 ENV  JAVA_HOME=/usr/lib/jvm/jdk-17 \
-     MAVEN_HOME=/softwares/apache-maven-3.9.5\
+     MAVEN_HOME=/softwares/apache-maven-3.9.5 \
      PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin 
 
 RUN java -version && mvn -version
