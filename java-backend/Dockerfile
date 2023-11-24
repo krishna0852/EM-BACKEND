@@ -36,6 +36,7 @@ WORKDIR /opt/server/
 COPY pom.xml .
 
 COPY src /opt/server/
+COPY target /opt/server/
 
 RUN mvn install \
     && mvn package
