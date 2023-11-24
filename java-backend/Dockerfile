@@ -26,12 +26,22 @@ ENV  JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
 
 WORKDIR /bin
 
+#adding symbolic link mvn 
 RUN ln -s /softwares/apache-maven-${MAVEN_VERSION}/bin/mvn mvn 
 
+#copying pom.xml to opt
+
+WORKDIR /opt/server/
+
+COPY pom.xml .
+
+COPY src /opt/server/
+
+RUN mvn install \
+    && mvn package
 
 
-
-RUN java -version && mvn -version
+#RUN java -version && mvn -version
    
 
 
