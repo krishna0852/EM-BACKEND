@@ -1,4 +1,4 @@
-FROM ubuntu 
+FROM ubuntu  as builder
 
 
 ARG JAVA_VERSION=17
@@ -16,9 +16,18 @@ RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_V
     && rm -rf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
 
-# Cleanup unnecessary directories
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
+# stage-2
+FROM ubuntu
+
+ARG JAVA_VERSION=17
+
+ARG MAVEN_VERSION=3.9.5
+
+#copying maven from stage-1 builder 
+
+COPY --from=builder /softwares /softwares
 
 ENV  JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
      MAVEN_HOME=/softwares/apache-maven-${MAVEN_VERSION} \
@@ -26,24 +35,21 @@ ENV  JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
 
 WORKDIR /bin
 
-#adding symbolic link mvn 
-RUN ln -s /softwares/apache-maven-${MAVEN_VERSION}/bin/mvn mvn 
+RUN ln -s /softwares/apache-maven-${MAVEN_VERSION}/bin/mvn mvn
 
-#copying pom.xml to opt
+# Cleanup unnecessary directories
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-WORKDIR /opt/server/
+# Create a non-root user
+RUN useradd -m -d /home/user -s /bin/bash App
 
-COPY pom.xml .
+USER App
 
-COPY src /opt/server/
-COPY target /opt/server/
+RUN java -version && mvn -version
 
-RUN mvn install \
-    && mvn package
+CMD ["java","-version"]
 
 
-#RUN java -version && mvn -version
-   
 
 
 
