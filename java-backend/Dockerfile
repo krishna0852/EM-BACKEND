@@ -9,9 +9,9 @@ RUN mkdir softwares
 
 WORKDIR /softwares
 
-# installing JAVA and maven 
-RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_VERSION}-jdk -y \
-    && curl -O https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz\
+RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_VERSION}-jdk -y
+# installing maven 
+RUN  curl -O https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz\
     && tar -xvf apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && rm -rf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
