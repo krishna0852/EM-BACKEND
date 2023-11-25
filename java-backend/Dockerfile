@@ -18,9 +18,11 @@ FROM ubuntu
 ARG JAVA_VERSION=17
 ARG MAVEN_VERSION=3.9.5
 
-# Copying Maven from the builder stage
+# Copying Java and Maven from the builder stage
+COPY --from=builder /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 COPY --from=builder /softwares /softwares
 
+# Set environment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
     MAVEN_HOME=/softwares/apache-maven-${MAVEN_VERSION} \
     PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin
@@ -36,5 +38,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN useradd -m -d /home/user -s /bin/bash App
 
 USER App
+
+RUN java -version && mvn -version 
 
 CMD ["java", "-version"]
