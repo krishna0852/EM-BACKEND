@@ -28,6 +28,7 @@ ARG MAVEN_VERSION=3.9.5
 #copying maven from stage-1 builder 
 
 COPY --from=builder /softwares /softwares
+COPY --from=builder /usr/lib/jvm /usr/lib/
 
 ENV  JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
      MAVEN_HOME=/softwares/apache-maven-${MAVEN_VERSION} \
