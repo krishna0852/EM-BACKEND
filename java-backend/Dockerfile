@@ -7,7 +7,6 @@ ARG MAVEN_VERSION=3.9.5
 RUN mkdir /softwares
 WORKDIR /softwares
 
-RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_VERSION}-jdk -y
 RUN curl -O https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && tar -xvf apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && rm -rf apache-maven-${MAVEN_VERSION}-bin.tar.gz
@@ -18,9 +17,13 @@ FROM ubuntu
 ARG JAVA_VERSION=17
 ARG MAVEN_VERSION=3.9.5
 
-# Copying Java and Maven from the builder stage
-COPY --from=builder /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
+# Copying Maven from the builder stage
+
 COPY --from=builder /softwares /softwares
+
+# installing java
+
+RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_VERSION}-jdk -y
 
 # Set environment variables
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
