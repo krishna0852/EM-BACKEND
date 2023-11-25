@@ -1,38 +1,29 @@
-FROM ubuntu  as builder
-
+# Stage 1: Build stage
+FROM ubuntu as builder
 
 ARG JAVA_VERSION=17
-
 ARG MAVEN_VERSION=3.9.5
 
-RUN mkdir softwares
-
+RUN mkdir /softwares
 WORKDIR /softwares
 
 RUN apt-get update -y && apt-get install curl -y && apt install openjdk-${JAVA_VERSION}-jdk -y
-# installing maven 
-RUN  curl -O https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz\
+RUN curl -O https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && tar -xvf apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && rm -rf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
-
-
-
-# stage-2
+# Stage 2: Final stage
 FROM ubuntu
 
 ARG JAVA_VERSION=17
-
 ARG MAVEN_VERSION=3.9.5
 
-#copying maven from stage-1 builder 
-
+# Copying Maven from the builder stage
 COPY --from=builder /softwares /softwares
-COPY --from=builder /usr/lib/jvm/java-17-openjdk-amd64 /usr/lib/
 
-ENV  JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
-     MAVEN_HOME=/softwares/apache-maven-${MAVEN_VERSION} \
-     PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin 
+ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64 \
+    MAVEN_HOME=/softwares/apache-maven-${MAVEN_VERSION} \
+    PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin
 
 WORKDIR /bin
 
@@ -46,13 +37,4 @@ RUN useradd -m -d /home/user -s /bin/bash App
 
 USER App
 
-RUN java -version && mvn -version
-
-CMD ["java","-version"]
-
-
-
-
-
-
-
+CMD ["java", "-version"]
